@@ -1,0 +1,7 @@
+query getAppSettings {
+  getAppSettings {
+     visibleTags
+     defaultLat 
+     defaultLng
+  }
+}

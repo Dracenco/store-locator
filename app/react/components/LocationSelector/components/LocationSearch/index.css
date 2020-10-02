@@ -1,0 +1,22 @@
+.storeItemName {}
+.storeItemAddress {}
+.storeItemDetails {}
+.storesList {}
+.storeItem {}
+.storesListContainer {}
+.storeMapContainer {}
+.tag-filter-container-main{}
+.tag-filter-pointer{}
+.tag-filter-clear{}
+@media screen and (max-width: 768px) {
+  .storeLocatorContainer {
+    flex-direction: column !important;
+    width: 100%;
+  }
+  .storesList {
+    width: 100%;
+  }
+  .storeMapContainer {
+    width: 100% !important;
+  }
+}

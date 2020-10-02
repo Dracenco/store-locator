@@ -1,0 +1,17 @@
+{
+  "name": "react",
+  "version": "1.0.0",
+  "description": "",
+  "main": "StoreLocator.js",
+  "dependencies": {
+    "@react-google-maps/api": "^1.8.5",
+    "axios": "^0.19.2",
+    "classnames": "^2.2.6"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jean Nussenzveig",
+  "license": "ISC"
+}

@@ -1,0 +1,14 @@
+{
+    "store/locator.yourlocation": "La tua posizione",
+    "store/locator.pickup":"Ritira in questo negozio",
+    "store/locator.workinghours":"Orario di apertura",
+    "store/locator.sunday":"Domenica",
+    "store/locator.monday":"Lunedì",
+    "store/locator.tuesday":"Martedì",
+    "store/locator.wednesday":"Mercoledì",
+    "store/locator.thursday":"Giovedì",
+    "store/locator.friday":"Venerdì",
+    "store/locator.saturday":"Sabato",
+    "store/locator.seemore":"Vedere di più",
+    "store/locator.clear":"Cancella"
+}

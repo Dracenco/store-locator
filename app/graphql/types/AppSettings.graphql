@@ -1,0 +1,7 @@
+type AppSettings {
+  appKey: String
+  appToken: String
+  visibleTags : String
+  defaultLat : String
+  defaultLng : String
+}

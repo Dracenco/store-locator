@@ -1,0 +1,8 @@
+{
+  "our-stores": {
+    "component": "StoreLocator"
+  },
+  "store-locator-search-input": {
+    "component": "SearchInput"
+  }
+}

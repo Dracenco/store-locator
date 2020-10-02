@@ -1,0 +1,40 @@
+type Address {
+    postalCode:   String
+    city:         String
+    state:        String
+    neighborhood: String
+    street:       String
+    number:       String
+    complement:   String
+    reference:    String
+    location:     Location
+}
+
+type Country {
+    acronym: String!
+    name:    String!
+}
+
+type Location {
+    latitude:  Float!
+    longitude: Float!
+}
+
+type BusinessHour {
+    dayOfWeek:   Float!
+    openingTime: String!
+    closingTime: String!
+}
+
+type Pickup {
+    id:                 String!
+    name:               String!
+    description:        String
+    instructions:       String
+    formatted_address:  String
+    address:            Address
+    isActive:           Boolean!
+    distance:           Float!
+    businessHours:      [BusinessHour]
+    tagsLabel:          [String]
+}

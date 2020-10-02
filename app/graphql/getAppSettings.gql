@@ -1,0 +1,9 @@
+query getAppSettings {
+  getAppSettings {
+    appKey
+    appToken
+    visibleTags
+    defaultLat 
+    defaultLng
+  }
+}

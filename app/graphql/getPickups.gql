@@ -1,0 +1,29 @@
+query getPickups {
+  getPickups {
+    id
+    name
+    description
+    instructions
+    businessHours {
+      dayOfWeek
+      openingTime
+      closingTime
+    }
+    address {
+      postalCode
+      city
+      state
+      neighborhood
+      street
+      number
+      complement
+      reference
+      location {
+        latitude
+        longitude
+      }
+    }
+    tagsLabel
+    isActive
+  }
+}

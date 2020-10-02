@@ -1,0 +1,14 @@
+{
+    "store/locator.yourlocation": "Your location",
+    "store/locator.pickup":"Pickup in this store",
+    "store/locator.workinghours":"Working hours",
+    "store/locator.sunday":"Sunday",
+    "store/locator.monday":"Monday",
+    "store/locator.tuesday":"Tuesday",
+    "store/locator.wednesday":"Wednesday",
+    "store/locator.thursday":"Thursday",
+    "store/locator.friday":"Friday",
+    "store/locator.saturday":"Saturday",
+    "store/locator.seemore":"See more",
+    "store/locator.clear":"Clear"
+}
