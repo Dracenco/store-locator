@@ -34,10 +34,16 @@ function mergeArrays(...arrays) {
 const LocationSearch = ({client, ...props}) => {
   const { runtime, visibleTags } = props
   const { query } = runtime
+
   const [center, setCenter] = useState({
     lat:41.871941,
     lng:12.567380
-  })
+  });
+/*  const getCurrentLocation = () => {
+
+
+  }
+  getCurrentLocation();*/
   const [stores, setStores] = useState([])
   const [closestStores, setClosest] = useState([])
   const [isLoading, setLoading] = useState(false)
@@ -56,24 +62,34 @@ const LocationSearch = ({client, ...props}) => {
         query: getAppSettings,
         variables: {}
       })
-      console.log("LTDEFAULT", ltDefault);
     } catch (e) {
-      console.log("error here", e);
     }
     
      ltDefault = ltDefault && ltDefault.data.getAppSettings
      setAppSettings(ltDefault)
-     console.log("ESTOU AQUI",ltDefault)
      setLatDefault(parseFloat(ltDefault.defaultLat))
      setLngDefault(parseFloat(ltDefault.defaultLng))
-    
-       console.log("Latitude", parseFloat(ltDefault.defaultLat))
 
 
     setLoading(false)
   }
 
+  const getUserLocation = () => {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      console.log(position.coords.longitude);
+
+     var coordinates = [
+          position.coords.longitude,
+          position.coords.latitude
+      ]
+      return coordinates;
+  }
+
+  const userLocation = getUserLocation();
+
   const calculateDistance = (store) => {
+    console.log("tut testim",userLocation);
+
     const distance =  google.maps.geometry.spherical.computeDistanceBetween({
       lat: () => (center.lat),
       lng: () => (center.lng)
@@ -100,8 +116,6 @@ const LocationSearch = ({client, ...props}) => {
 
     const storesByData = searchStoresByData()
 
-    console.log("prediction", prediction);
-    console.log("storesByData", storesByData);
 
     const lat = geometry.location.lat()
     const lng = geometry.location.lng()
@@ -125,10 +139,6 @@ const LocationSearch = ({client, ...props}) => {
     })
 
     const allStores = mergeArrays(bestStores, storesByData)
-
-    // console.log("bestStores", bestStores);
-    // console.log("allStores", allStores);
-    
 
     setClosest(bestStores)
   }
@@ -180,14 +190,17 @@ const LocationSearch = ({client, ...props}) => {
   }
 
   useEffect(() => {
- 
+
+      if (!stores.length) {
+
+        getStores()
+            .finally(function () {
+              fetchConfig()
+            })
+      }
+    });
     // getDefaultCenter()
-    if (!stores.length) {
-      getStores()
-      .finally(function () {
-        fetchConfig()
-      })
-    }
+
   
   }, [])
 
@@ -232,7 +245,7 @@ const LocationSearch = ({client, ...props}) => {
       setClosest(stores)
       return null
     }
-    const fStores = stores.filter(store => store.tagsLabel.map(t => t.trim().toLowerCase()).includes("miriade".toLowerCase()))
+    const fStores = stores.filter(store => store.tagsLabel.map(t => t.trim().toLowerCase()).includes("multibrand".toLowerCase()))
 
     setClosest(fStores)
     
@@ -244,7 +257,7 @@ const LocationSearch = ({client, ...props}) => {
   useEffect(() => {
     if (getSettings && !tagsSet && tags && tags.length) {
       console.log("set tag -> ", getSettings.visibleTags || tags[0]);
-      storesByTag("miriade".toLowerCase() || tags[0].trim().toLowerCase())
+      storesByTag("multibrand".toLowerCase() || tags[0].trim().toLowerCase())
       setTagsSet(true)
     }
   }, [tags, getSettings])
@@ -258,7 +271,7 @@ const LocationSearch = ({client, ...props}) => {
             {!isLoading && mapReference.current && stores && stores.length && <LocationInput style={{ width: '100%' }} type="Location" onChange={(places, value) => { handleChange(places); console.log("value", value) }} />}
             {!isLoading && mapReference.current && stores && stores.length && getSettings && tags && tags.length > 1 && <TagFilter visibleTags={visibleTags} storesByTag={storesByTag} defaultTag={getSettings.visibleTags || tags[0]} tags={tags} />}
             {(!isLoading && (stores || closestStores) && mapReference.current) && <div className='mt5 w-100' style={{ maxHeight: '70vh', overflow: 'auto' }}>
-              {(closestStores && closestStores.length ? closestStores : stores.filter(s => s.tagsLabel.map(t => t.trim().toLowerCase()).includes('miriade'))).map(store => {
+              {(closestStores && closestStores.length ? closestStores : stores.filter(s => s.tagsLabel.map(t => t.trim().toLowerCase()).includes('multibrand'))).map(store => {
                 
                 return (
                   <Box key={store.id} className={styles.storeItem}>
@@ -303,7 +316,7 @@ const LocationSearch = ({client, ...props}) => {
             onLoad={mapLoaded}
           >
             {(getSettings && !isLoading && mapReference.current) && <div className={styles.innerMapContainer}>
-              {stores.filter(s => s.tagsLabel.map(t => t.trim().toLowerCase()).includes("miriade".toLowerCase())).map(store => {
+              {stores.filter(s => s.tagsLabel.map(t => t.trim().toLowerCase()).includes("multibrand".toLowerCase())).map(store => {
                 if (!store) return
                 return (
                   <StoreMarker store={store} key={store.id} map={mapReference.current} />

@@ -42,6 +42,7 @@ const TagFilter = ({
     getVisibleTags()
   }, [])
   if (loading) return null
+
   return (
     <div className={classNames(styles['tag-filter-container-main'],'w-100 mx10 overflow-x-auto flex flex-column')} style={{flexWrap: 'nowrap', padding: '20px 0px', margin: '5px 0px'}}>
       {getSettings && tags.filter(t => (getSettings.visibleTags || []).indexOf(t)>-1).map(tag => (
