@@ -50,6 +50,8 @@ const LocationSearch = ({client, ...props}) => {
   const [longitudeDefault, setLngDefault] = useState(null)
   const [latitudeDefault, setLatDefault] = useState(null)
   const [tagsSet, setTagsSet] = useState(false)
+  const [userLocation,setUserLocation] = useState({lat: 41.871941, lng: 12.567380})
+  const [userLocationUpdated,setUserLocationUpdated] = useState(true)
   const mapReference = useRef(null)
 
   const [getSettings, setAppSettings] = useState(null)
@@ -76,23 +78,28 @@ const LocationSearch = ({client, ...props}) => {
 
   const getUserLocation = () => {
     navigator.geolocation.getCurrentPosition(function(position) {
-      console.log(position.coords.longitude);
+      console.log("coordinates", position.coords.longitude);
 
-     var coordinates = [
-          position.coords.longitude,
-          position.coords.latitude
-      ]
-      return coordinates;
-  }
+      let coordinates = {
+          lng: position.coords.longitude,
+          lat: position.coords.latitude
+      }
 
-  const userLocation = getUserLocation();
+      setUserLocation(coordinates);
+      setUserLocationUpdated(false);
+    })
+  } 
+
+  useEffect(()=>{
+    userLocationUpdated && getUserLocation()
+  },[userLocation])
 
   const calculateDistance = (store) => {
     console.log("tut testim",userLocation);
 
     const distance =  google.maps.geometry.spherical.computeDistanceBetween({
-      lat: () => (center.lat),
-      lng: () => (center.lng)
+      lat: () => (userLocation.lat),
+      lng: () => (userLocation.lng)
     }, {
       lat: () => (store.address.location.latitude),
       lng: () => (store.address.location.longitude)
@@ -198,11 +205,8 @@ const LocationSearch = ({client, ...props}) => {
               fetchConfig()
             })
       }
-    });
+  });
     // getDefaultCenter()
-
-  
-  }, [])
 
   const mapLoaded = mapInstance => {
    
