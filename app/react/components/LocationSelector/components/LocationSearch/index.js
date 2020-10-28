@@ -165,7 +165,7 @@ const LocationSearch = ({client, ...props}) => {
     }
 
     stores = stores && stores.data.getPickups
-
+    console.log("s-a incarcat");
     if (stores && stores.length) {
       stores = stores.map(store => {
         return {
@@ -208,7 +208,6 @@ const LocationSearch = ({client, ...props}) => {
     // getDefaultCenter()
 
   const mapLoaded = mapInstance => {
-   
     // if(longitudeDefault && latitudeDefault) {
     //   mapInstance.setCenter({lat:latitudeDefault,lng:longitudeDefault})
     // }
@@ -296,7 +295,6 @@ const LocationSearch = ({client, ...props}) => {
       return  filterBrand.multibrand
     })
   }*/
-
   return (
     <LoadScript googleMapsApiKey={API_KEY} libraries={libraries}>
       <div className={`pt5 pb5 w-100 flex justify-between items-start ${styles.storeLocatorContainer}`}>
