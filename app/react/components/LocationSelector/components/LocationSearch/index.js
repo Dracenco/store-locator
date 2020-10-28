@@ -53,6 +53,7 @@ const LocationSearch = ({client, ...props}) => {
   const [userLocation,setUserLocation] = useState({lat: 41.871941, lng: 12.567380})
   const [userLocationUpdated,setUserLocationUpdated] = useState(true)
   const mapReference = useRef(null)
+  const [filterBrand,setFilterBrand] = useState({multibrand: false, monobrand: false});
 
   const [getSettings, setAppSettings] = useState(null)
   const getDefaultCenter = async () => {
@@ -95,8 +96,6 @@ const LocationSearch = ({client, ...props}) => {
   },[userLocation])
 
   const calculateDistance = (store) => {
-    console.log("tut testim",userLocation);
-
     const distance =  google.maps.geometry.spherical.computeDistanceBetween({
       lat: () => (userLocation.lat),
       lng: () => (userLocation.lng)
@@ -266,6 +265,38 @@ const LocationSearch = ({client, ...props}) => {
     }
   }, [tags, getSettings])
 
+  const changeMonoBrandState = () => {
+    setFilterBrand({...filterBrand, monobrand: !filterBrand.monobrand});
+  };
+
+  const changeMultiBrandState = () => {
+    setFilterBrand({...filterBrand, multibrand: !filterBrand.multibrand});
+  };
+
+  const buildFilter = () => {
+    const multibrandImage = (filterBrand.multibrand) ?
+        <img src="/arquivos/checkbox-checked.png" className={styles.checked} alt="multibrand"  width="27" height="27"/>:
+        <img src="/arquivos/checkbox-empty.png" className={styles.unchecked} alt="multibrand"  width="27" height="27"/>;
+
+    const monobrandImage = (filterBrand.monobrand) ?
+        <img src="/arquivos/checkbox-checked.png" className={styles.checked} alt="multibrand"  width="27" height="27"/>:
+        <img src="/arquivos/checkbox-empty.png" className={styles.unchecked} alt="multibrand"  width="27" height="27"/>;
+
+    return (
+        <div className={styles.filterMainContainerMultibrand}>
+          <div className={styles.divBrand} onClick={changeMonoBrandState}>{monobrandImage}<img src="arquivos/monobrand.png" className={styles.img} alt="monobrand"  width="25" height="33"/><div className={styles.multibrandFilterMainContainer}><div className={styles.multibrandFilter}>  { 'Monomarca'}</div><div className={styles.multibrandFilterSubText}>  { 'Negozi a marchio iDO'}</div></div></div>
+          <div className={styles.divBrand} onClick={changeMultiBrandState}>{multibrandImage}<img src="/arquivos/multibrand.png" className={styles.img} alt="multibrand"  width="25" height="33"/><div className={styles.multibrandFilterMainContainer}><div className={styles.multibrandFilter}>  { 'Multimarca'}</div><div className={styles.multibrandFilterSubText}>  { 'Rivenditori autorizzati'}</div></div></div>
+        </div>
+    )
+  }
+/*  let filteredStores
+
+  if(!isLoading && !(!filterBrand.multibrand && !filterBrand.monobrand)){
+    filteredStores = stores.filter(s => {
+      return  filterBrand.multibrand
+    })
+  }*/
+
   return (
     <LoadScript googleMapsApiKey={API_KEY} libraries={libraries}>
       <div className={`pt5 pb5 w-100 flex justify-between items-start ${styles.storeLocatorContainer}`}>
@@ -274,12 +305,14 @@ const LocationSearch = ({client, ...props}) => {
             {isLoading && !mapReference.current && <Spinner />}
             {!isLoading && mapReference.current && stores && stores.length && <LocationInput style={{ width: '100%' }} type="Location" onChange={(places, value) => { handleChange(places); console.log("value", value) }} />}
             {!isLoading && mapReference.current && stores && stores.length && getSettings && tags && tags.length > 1 && <TagFilter visibleTags={visibleTags} storesByTag={storesByTag} defaultTag={getSettings.visibleTags || tags[0]} tags={tags} />}
-            {(!isLoading && (stores || closestStores) && mapReference.current) && <div className='mt5 w-100' style={{ maxHeight: '70vh', overflow: 'auto' }}>
+            {(!isLoading && (stores || closestStores) && mapReference.current) && <div className='mt5 w-100' style={{ maxHeight: '70vh', overflow: 'auto' }}> {buildFilter()}
               {(closestStores && closestStores.length ? closestStores : stores.filter(s => s.tagsLabel.map(t => t.trim().toLowerCase()).includes('multibrand'))).map(store => {
-                
+
                 return (
                   <Box key={store.id} className={styles.storeItem}>
-                    <h4 className={styles.storeItemName}>{store.name}</h4>
+                    { store && store.tagsLabel.map(t => t.trim().toLowerCase()).includes('multibrand') ? <div className={styles.divBrand}><img src="/arquivos/multibrand.png" className={styles.imgBrand} alt="multibrand"  width="25" height="33"/><div className={styles.multibrand}>  { 'NEW GENERATION'}</div></div> :''}
+                    { store && store.tagsLabel.map(t => t.trim().toLowerCase()).includes('monobrand') ? <div className={styles.divBrand}><img src="arquivos/monobrand.png" className={styles.imgBrand} alt="monobrand"  width="25" height="33"/><div className={styles.multibrand}>  { 'IDO'}</div></div> :''}
+                   <h4 className={styles.storeItemName}>{store.name}</h4>
                     <h5 className={`gray ${styles.storeItemAddress}`}>{store.formatted_address || formattedAddress(store.address)}</h5>
                     <span>Distance: {store.distance} km</span>
                     <br />

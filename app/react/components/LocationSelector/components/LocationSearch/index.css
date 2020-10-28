@@ -20,3 +20,69 @@
     width: 100% !important;
   }
 }
+
+.multibrand {
+  width: 226px;
+  height: 26px;
+  color: #001930;
+  font-family: "MuseoJHSans900";
+  font-size: 20px;
+  font-style: normal;
+  letter-spacing: normal;
+  line-height: 29px;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.multibrandFilter {
+  color: #001930;
+  font-family: "MuseoJHSans500";
+  font-size: 16px;
+  font-style: normal;
+  letter-spacing: normal;
+  line-height: 21px;
+  text-align: left;
+  font-weight: bold;
+}
+
+.multibrandFilterSubtext {
+  font-family: "MuseoJHSans900";
+  font-style: normal;
+  letter-spacing: normal;
+  line-height: normal;
+}
+
+.multibrandFilterMainContainer {
+  margin-left: 10px;
+  margin-top: 20px;
+}
+
+.unchecked {
+  margin-right: 5px;
+}
+
+.checked {
+  margin-right: 5px;
+}
+
+.img {
+
+}
+
+.divBrand {
+  display: flex;
+  align-items: center;
+}
+
+.divBrand .imgBrand {
+  margin-right: 15px;
+}
+
+.filterMainContainerMultibrand {
+  height: 190px;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  padding: 2rem;
+}
+
