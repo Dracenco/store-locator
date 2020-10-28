@@ -54,6 +54,7 @@ const LocationSearch = ({client, ...props}) => {
   const [userLocationUpdated,setUserLocationUpdated] = useState(true)
   const mapReference = useRef(null)
   const [filterBrand,setFilterBrand] = useState({multibrand: false, monobrand: false});
+  const [filteredStores, setFilteredStores] = useState([]);
 
   const [getSettings, setAppSettings] = useState(null)
   const getDefaultCenter = async () => {
@@ -137,14 +138,14 @@ const LocationSearch = ({client, ...props}) => {
     mapReference.current.setCenter(center)
     setCenter(center)
 
-    const bestStores = stores.filter(s => s.tagsLabel.map(tl => tl.trim().toLowerCase()).includes(getSettings.visibleTags)).filter(store => {
+    const bestStores = stores.filter(store => {
       return google.maps.geometry.spherical.computeDistanceBetween(centerLit, {
         lat: () => (store.address.location.latitude),
         lng: () => (store.address.location.longitude)
       }) < 6000
     })
 
-    const allStores = mergeArrays(bestStores, storesByData)
+    // const allStores = mergeArrays(bestStores)
 
     setClosest(bestStores)
   }
@@ -259,17 +260,18 @@ const LocationSearch = ({client, ...props}) => {
   useEffect(() => {
     if (getSettings && !tagsSet && tags && tags.length) {
       console.log("set tag -> ", getSettings.visibleTags || tags[0]);
-      storesByTag("multibrand".toLowerCase() || tags[0].trim().toLowerCase())
+      // storesByTag("multibrand".toLowerCase() || tags[0].trim().toLowerCase())
       setTagsSet(true)
     }
   }, [tags, getSettings])
 
-  const changeMonoBrandState = () => {
-    setFilterBrand({...filterBrand, monobrand: !filterBrand.monobrand});
-  };
-
-  const changeMultiBrandState = () => {
-    setFilterBrand({...filterBrand, multibrand: !filterBrand.multibrand});
+  const onChangeFilterBrand = (filter) => {
+    let newState = {
+      monobrand: filterBrand.monobrand,
+      multibrand: filterBrand.multibrand
+    }
+    newState[filter] = !newState[filter];
+    setFilterBrand(newState);
   };
 
   const buildFilter = () => {
@@ -283,18 +285,29 @@ const LocationSearch = ({client, ...props}) => {
 
     return (
         <div className={styles.filterMainContainerMultibrand}>
-          <div className={styles.divBrand} onClick={changeMonoBrandState}>{monobrandImage}<img src="arquivos/monobrand.png" className={styles.img} alt="monobrand"  width="25" height="33"/><div className={styles.multibrandFilterMainContainer}><div className={styles.multibrandFilter}>  { 'Monomarca'}</div><div className={styles.multibrandFilterSubText}>  { 'Negozi a marchio iDO'}</div></div></div>
-          <div className={styles.divBrand} onClick={changeMultiBrandState}>{multibrandImage}<img src="/arquivos/multibrand.png" className={styles.img} alt="multibrand"  width="25" height="33"/><div className={styles.multibrandFilterMainContainer}><div className={styles.multibrandFilter}>  { 'Multimarca'}</div><div className={styles.multibrandFilterSubText}>  { 'Rivenditori autorizzati'}</div></div></div>
+          <div className={styles.divBrand} onClick={() => onChangeFilterBrand('monobrand')}>{monobrandImage}<img src="arquivos/monobrand.png" className={styles.img} alt="monobrand"  width="25" height="33"/><div className={styles.multibrandFilterMainContainer}><div className={styles.multibrandFilter}>  { 'Monomarca'}</div><div className={styles.multibrandFilterSubText}>  { 'Negozi a marchio iDO'}</div></div></div>
+          <div className={styles.divBrand} onClick={() => onChangeFilterBrand('multibrand')}>{multibrandImage}<img src="/arquivos/multibrand.png" className={styles.img} alt="multibrand"  width="25" height="33"/><div className={styles.multibrandFilterMainContainer}><div className={styles.multibrandFilter}>  { 'Multimarca'}</div><div className={styles.multibrandFilterSubText}>  { 'Rivenditori autorizzati'}</div></div></div>
         </div>
     )
   }
-/*  let filteredStores
 
-  if(!isLoading && !(!filterBrand.multibrand && !filterBrand.monobrand)){
-    filteredStores = stores.filter(s => {
-      return  filterBrand.multibrand
-    })
-  }*/
+  useEffect(()=>{
+    let newFilteredStores = [];
+    let storesList = closestStores.length ? closestStores : stores;
+    if(filterBrand.monobrand){
+      storesList.forEach(s => {
+        s.tagsLabel.includes('monobrand') && newFilteredStores.push(s);
+      })
+    }
+    if(filterBrand.multibrand){
+      storesList.forEach(s => {
+        s.tagsLabel.includes('multibrand') && newFilteredStores.push(s);
+      })
+    }
+    setFilteredStores(newFilteredStores)
+
+  },[filterBrand])
+
   return (
     <LoadScript googleMapsApiKey={API_KEY} libraries={libraries}>
       <div className={`pt5 pb5 w-100 flex justify-between items-start ${styles.storeLocatorContainer}`}>
@@ -302,9 +315,9 @@ const LocationSearch = ({client, ...props}) => {
           <div className={`flex flex-column w-100 items-start justify-start ${styles.storesListContainer}`}>
             {isLoading && !mapReference.current && <Spinner />}
             {!isLoading && mapReference.current && stores && stores.length && <LocationInput style={{ width: '100%' }} type="Location" onChange={(places, value) => { handleChange(places); console.log("value", value) }} />}
-            {!isLoading && mapReference.current && stores && stores.length && getSettings && tags && tags.length > 1 && <TagFilter visibleTags={visibleTags} storesByTag={storesByTag} defaultTag={getSettings.visibleTags || tags[0]} tags={tags} />}
+            {/* {!isLoading && mapReference.current && stores && stores.length && getSettings && tags && tags.length > 1 && <TagFilter visibleTags={visibleTags} storesByTag={storesByTag} defaultTag={getSettings.visibleTags || tags[0]} tags={tags} />} */}
             {(!isLoading && (stores || closestStores) && mapReference.current) && <div className='mt5 w-100' style={{ maxHeight: '70vh', overflow: 'auto' }}> {buildFilter()}
-              {(closestStores && closestStores.length ? closestStores : stores.filter(s => s.tagsLabel.map(t => t.trim().toLowerCase()).includes('multibrand'))).map(store => {
+              {(filteredStores.length ? filteredStores :  closestStores && closestStores.length ? closestStores : stores).map(store => {
 
                 return (
                   <Box key={store.id} className={styles.storeItem}>
