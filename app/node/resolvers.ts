@@ -5,7 +5,7 @@ const appConfig = async (vtex: any, allowSensitiveInfo: Boolean) => {
   const apps = new Apps(vtex)
   let data
   try {
-      data = await apps.getAppSettings('codeby.store-locator')
+      data = await apps.getAppSettings('storeido.store-locator')
   } catch (err) {
       console.error(`[SETTINGS] - Error getting settings: ${err}`)
   }
