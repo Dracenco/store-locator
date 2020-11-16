@@ -14,13 +14,13 @@ import './index.css'
 const LocationInput = props => {
 
   const { type, handleClose, onChange, value } = props
-  const { isLoaded, loadError } = useLoadScript({
+/*  const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: API_KEY,
     libraries: libraries
-  })
+  })*/
   const { loading, orderForm, updateOrderFormShipping, refetch } = useOrderForm()
 
-  console.log('isLoaded', isLoaded);
+/*  console.log('isLoaded', isLoaded);*/
 
   const [term, setTerm] = useState('')
   const timeoutRef = useRef(null)
@@ -78,7 +78,7 @@ const LocationInput = props => {
     saveAddress(userAddress)
   }
 
-  if (!isLoaded || loading) return <Spinner />
+/*  if (!isLoaded || loading) return <Spinner />*/
 
   if(type == 'Location')
     return (

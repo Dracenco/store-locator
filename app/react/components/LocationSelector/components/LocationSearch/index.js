@@ -88,6 +88,7 @@ const LocationSearch = ({client, ...props}) => {
       }
 
       setUserLocation(coordinates);
+      setCenter(coordinates);
       setUserLocationUpdated(false);
     })
   } 
@@ -317,13 +318,15 @@ const LocationSearch = ({client, ...props}) => {
             {!isLoading && mapReference.current && stores && stores.length && <LocationInput style={{ width: '100%' }} type="Location" onChange={(places, value) => { handleChange(places); console.log("value", value) }} />}
             {/* {!isLoading && mapReference.current && stores && stores.length && getSettings && tags && tags.length > 1 && <TagFilter visibleTags={visibleTags} storesByTag={storesByTag} defaultTag={getSettings.visibleTags || tags[0]} tags={tags} />} */}
             {(!isLoading && (stores || closestStores) && mapReference.current) && <div className='mt5 w-100' style={{ maxHeight: '70vh', overflow: 'auto' }}> {buildFilter()}
-              {(filteredStores.length ? filteredStores :  closestStores && closestStores.length ? closestStores : stores).map(store => {
+              {(filteredStores.length ? filteredStores :  closestStores && closestStores.length ? closestStores : stores).sort((a,b) => a.distance - b.distance).map(store => {
 
                 return (
                   <Box key={store.id} className={styles.storeItem}>
-                    { store && store.tagsLabel.map(t => t.trim().toLowerCase()).includes('multibrand') ? <div className={styles.divBrand}><img src="/arquivos/multibrand.png" className={styles.imgBrand} alt="multibrand"  width="25" height="33"/><div className={styles.multibrand}>  { 'NEW GENERATION'}</div></div> :''}
-                    { store && store.tagsLabel.map(t => t.trim().toLowerCase()).includes('monobrand') ? <div className={styles.divBrand}><img src="arquivos/monobrand.png" className={styles.imgBrand} alt="monobrand"  width="25" height="33"/><div className={styles.multibrand}>  { 'IDO'}</div></div> :''}
-                   <h4 className={styles.storeItemName}>{store.name}</h4>
+                    { store && store.tagsLabel.map(t => t.trim().toLowerCase()).includes('multibrand') ? <div className={styles.divBrand}><img src="/arquivos/multibrand.png" className={styles.imgBrand} alt="multibrand"  width="25" height="33"/><div className={styles.multibrand}>{ store.name}</div></div> :''}
+                    { store && store.tagsLabel.map(t => t.trim().toLowerCase()).includes('monobrand') ? <div className={styles.divBrand}><img src="arquivos/monobrand.png" className={styles.imgBrand} alt="monobrand"  width="25" height="33"/><div className={styles.multibrand}>{'IDO'}</div></div>:''}
+                    <br />
+                    { store && store.tagsLabel.map(t => t.trim().toLowerCase()).includes('monobrand') ? <div className={styles.storeItemName}>{store.name}</div>:''}
+
                     <h5 className={`gray ${styles.storeItemAddress}`}>{store.formatted_address || formattedAddress(store.address)}</h5>
                     <span>Distance: {store.distance} km</span>
                     <br />
@@ -331,13 +334,7 @@ const LocationSearch = ({client, ...props}) => {
                     <br />
                     <WeekHour store={store} />
                     <br />
-                    <div className='w-100 vtex-locator-tags-container'>
-                      {store.tagsLabel && store.tagsLabel.map(tag => (
-                        <div className="ma3">
-                          <Tag bgColor="#134CD8" color="#ffffff">{tag.name || tag}</Tag>
-                        </div>
-                      ))}
-                    </div>
+
                     <br />
                     <Button
                       variation="primary"
@@ -364,7 +361,7 @@ const LocationSearch = ({client, ...props}) => {
             onLoad={mapLoaded}
           >
             {(getSettings && !isLoading && mapReference.current) && <div className={styles.innerMapContainer}>
-              {stores.filter(s => s.tagsLabel.map(t => t.trim().toLowerCase()).includes("multibrand".toLowerCase())).map(store => {
+              {stores.map(store => {
                 if (!store) return
                 return (
                   <StoreMarker store={store} key={store.id} map={mapReference.current} />

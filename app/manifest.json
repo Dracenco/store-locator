@@ -1,7 +1,7 @@
 {
-  "vendor": "codeby",
+  "vendor": "storeido",
   "name": "store-locator",
-  "version": "1.2.4-beta.0",
+  "version": "0.1.0",
   "builders": {
     "messages": "1.x",
     "node": "4.x",
